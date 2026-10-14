@@ -162,7 +162,8 @@ Weather Agent Setup Verification
 
 #### B. Nghiệm thu thực tế trên Web UI (`uv run adk web`)
 
-![Giao diện Google ADK Web UI chạy thực tế với FastMCP Server](assets/adk_web_ui_demo.png)
+##### 1. Thời tiết hiện tại (`screenshots/04-adk-current.png`):
+![Giao diện Google ADK Web UI - Thời tiết hiện tại](screenshots/04-adk-current.png)
 
 - **Địa chỉ truy cập:** `http://localhost:8000/dev-ui/?app=weather_agent`
 - **Tác vụ thử nghiệm:** Người dùng hỏi: *"Thời tiết ở Hà Nội hôm nay như nào"*
@@ -171,6 +172,15 @@ Weather Agent Setup Verification
   2. Sự kiện `#2`: Agent nhận diện ý định và kích hoạt tool call `get_current_weather("Hanoi")`.
   3. Sự kiện `#3`: `McpToolset` gửi request Streamable HTTP tới FastMCP server tại port 8085 và nhận dữ liệu thời tiết thực tế.
   4. Sự kiện `#4`: Mô hình `gpt-4o-mini` tổng hợp câu trả lời tự nhiên, hiển thị chi tiết nhiệt độ (29.0°C), độ ẩm (82%), gió, chỉ số UV và tầm nhìn xa.
+
+##### 2. Dự báo thời tiết (`screenshots/04-adk-forecast.png`):
+![Giao diện Google ADK Web UI - Dự báo thời tiết](screenshots/04-adk-forecast.png)
+
+- **Tác vụ thử nghiệm:** Người dùng hỏi: *"Dự báo thời tiết 3 ngày tới ở Đà Nẵng"*
+- **Tiến trình xử lý trên hệ thống:**
+  1. Sự kiện `#1`: Người dùng gửi câu hỏi yêu cầu dự báo thời tiết.
+  2. Sự kiện `#3`: Agent gọi tool `get_forecast(city="Đà Nẵng", days=3)`.
+  3. Sự kiện `#4`: Mô hình `gpt-4o-mini` phân tích và trả về dự báo chi tiết từng ngày (Ngày mai, Ngày kia, Ngày thứ 3) kèm nhiệt độ cao nhất/thấp nhất, lượng mưa và chỉ số UV.
 - **Sơ đồ kiến trúc động:** Bên trái giao diện hiển thị đồ thị tương tác chuẩn `weather_agent` $\rightarrow$ `McpToolset`.
 
 ---

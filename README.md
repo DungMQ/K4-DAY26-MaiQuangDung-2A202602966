@@ -5,32 +5,39 @@
 ## Cấu trúc repo
 
 ```
-day26-mcp/
-├── README.md                ← Bạn đang đọc file này
-├── requirements.txt         ← pip install -r requirements.txt
-│
-├── 01-function-calling/     ← Bước 1: Function Calling thuần (Gemini SDK)
+KX-DAY26-HoVaTen-MSSV/
+├── 01-function-calling/     ← Bước 1: Function Calling thuần (OpenAI gpt-4o-mini & Gemini SDK)
 │   ├── README.md
 │   └── weather_function_calling.py
-│
-├── 02-mcp-basics/           ← Bước 2: MCP server + client (không cần API key)
+├── 02-mcp-basics/           ← Bước 2: MCP server + client qua Stdio (không cần API key)
 │   ├── README.md
 │   ├── weather_server.py
 │   └── weather_client.py
-│
-└── 03-production/           ← Bước 3: Auth, Tool Registry, Versioning
-    ├── README.md
-    ├── auth_server.py
-    ├── auth_client.py
-    ├── registry.json
-    ├── registry_client.py
-    ├── versioned_server.py
-    └── versioned_client.py
-│
-└── 04-lab/                  ← Bước 4: Agent Google ADK + MCP server thật (WeatherAPI)
-    ├── README.md
-    ├── mcp-server/          ← FastMCP server (Streamable HTTP, Dockerfile cho Cloud Run)
-    └── mcp-client/          ← ADK agent dùng McpToolset
+├── 03-production/           ← Bước 3: Auth, Tool Registry, Versioning
+│   ├── README.md
+│   ├── auth_server.py
+│   ├── auth_client.py
+│   ├── registry.json
+│   ├── registry_client.py
+│   ├── versioned_server.py
+│   └── versioned_client.py
+├── 04-lab/                  ← Bước 4: Agent Google ADK + FastMCP server
+│   ├── README.md
+│   ├── mcp-server/          ← FastMCP server (Streamable HTTP, port 8085)
+│   └── mcp-client/          ← ADK agent dùng McpToolset (OpenAI gpt-4o-mini)
+├── screenshots/             ← Ảnh chụp log thực thi và giao diện thực tế
+│   ├── 01-function-calling.png
+│   ├── 02-mcp-client.png
+│   ├── 03a-auth-ok.png
+│   ├── 03a-auth-fail.png
+│   ├── 03b-registry.png
+│   ├── 03c-versioning.png
+│   ├── 04-verify-setup.png
+│   ├── 04-adk-current.png
+│   └── 04-adk-forecast.png
+├── REPORT.md                ← Báo cáo chi tiết kết quả thực nghiệm
+├── README.md                ← Bạn đang đọc file này
+└── requirements.txt         ← pip install -r requirements.txt
 ```
 
 > Bước 01–03 dùng **MCP Python SDK v2** (`mcp>=2.0`, xem `requirements.txt`).

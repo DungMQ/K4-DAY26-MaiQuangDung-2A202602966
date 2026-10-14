@@ -24,7 +24,7 @@ if hasattr(sys.stderr, "reconfigure"):
 from mcp import ClientSession
 from mcp.client.streamable_http import create_mcp_http_client, streamable_http_client
 
-SERVER_URL = "http://localhost:8000/mcp"
+SERVER_URL = os.environ.get("AUTH_SERVER_URL", "http://localhost:8001/mcp")
 TOKEN = os.environ.get("MCP_AUTH_TOKEN", "dev-token-abc123")
 
 
