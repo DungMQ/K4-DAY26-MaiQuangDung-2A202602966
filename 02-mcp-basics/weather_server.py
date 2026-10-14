@@ -32,5 +32,37 @@ def get_weather(city: str) -> str:
     return f"{city}: {_MOCK_DB.get(city, '28°C, không có dữ liệu chi tiết')}"
 
 
+@mcp.tool()
+def get_forecast(city: str, days: int = 3) -> str:
+    """Dự báo thời tiết cho các ngày tới của một thành phố."""
+    import json
+
+    mock_forecasts = {
+        "Hanoi": [
+            {"day": "Ngày mai", "temp": "27°C - 31°C", "condition": "mưa rào rải rác"},
+            {"day": "Ngày kia", "temp": "26°C - 30°C", "condition": "nhiều mây"},
+            {"day": "Ngày thứ 3", "temp": "28°C - 33°C", "condition": "trời hửng nắng"},
+        ],
+        "Danang": [
+            {"day": "Ngày mai", "temp": "28°C - 32°C", "condition": "nắng nhẹ, mưa dông chiều tối"},
+            {"day": "Ngày kia", "temp": "29°C - 34°C", "condition": "trời nắng đẹp"},
+            {"day": "Ngày thứ 3", "temp": "27°C - 31°C", "condition": "mưa rào thoáng qua"},
+        ],
+        "Haiphong": [
+            {"day": "Ngày mai", "temp": "27°C - 32°C", "condition": "mưa rào"},
+            {"day": "Ngày kia", "temp": "28°C - 33°C", "condition": "nhiều mây"},
+            {"day": "Ngày thứ 3", "temp": "29°C - 34°C", "condition": "nắng gián đoạn"},
+        ],
+    }
+    forecast_list = mock_forecasts.get(city)
+    if not forecast_list:
+        forecast_list = [{"day": f"Ngày +{i+1}", "temp": "28°C", "condition": "thời tiết ôn hòa"} for i in range(days)]
+    else:
+        forecast_list = forecast_list[:days]
+
+    return json.dumps({"city": city, "forecast": forecast_list}, ensure_ascii=False)
+
+
 if __name__ == "__main__":
     mcp.run()  # mặc định chạy qua stdio
+

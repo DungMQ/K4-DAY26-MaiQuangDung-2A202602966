@@ -7,6 +7,11 @@ import os
 import sys
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 def check_environment():
     """Check if .env file exists and is configured"""
     print("🔍 Checking environment configuration...")
@@ -17,18 +22,22 @@ def check_environment():
         print("   Run: echo 'GOOGLE_API_KEY=your_key' > .env")
         return False
     
-    # Check if GOOGLE_API_KEY is set
+    # Check if OPENAI_API_KEY or GOOGLE_API_KEY is set
     from dotenv import load_dotenv
     load_dotenv()
     
-    api_key = os.getenv("GOOGLE_API_KEY")
-    if not api_key or api_key == "your_google_api_key_here":
-        print("❌ GOOGLE_API_KEY not configured in .env")
-        print("   Get key from: https://aistudio.google.com/apikey")
+    openai_key = os.getenv("OPENAI_API_KEY")
+    google_key = os.getenv("GOOGLE_API_KEY")
+
+    if openai_key and openai_key.startswith("sk-"):
+        print(f"✅ OPENAI_API_KEY configured ({openai_key[:12]}...) [Sử dụng model OpenAI]")
+        return True
+    elif google_key and google_key != "your_google_api_key_here":
+        print(f"✅ GOOGLE_API_KEY configured ({google_key[:10]}...) [Sử dụng model Gemini]")
+        return True
+    else:
+        print("❌ Chưa cấu hình OPENAI_API_KEY hoặc GOOGLE_API_KEY trong .env")
         return False
-    
-    print(f"✅ GOOGLE_API_KEY configured ({api_key[:10]}...)")
-    return True
 
 def check_dependencies():
     """Check if required packages are installed"""

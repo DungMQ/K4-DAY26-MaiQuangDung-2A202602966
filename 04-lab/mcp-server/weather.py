@@ -2,6 +2,13 @@ from typing import Any
 import asyncio
 import httpx
 import os
+import sys
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 from mcp.server.fastmcp import FastMCP
 
 # Initialize FastMCP server
@@ -19,7 +26,6 @@ async def make_weather_request(endpoint: str, params: dict[str, str]) -> dict[st
     """Make a request to the WeatherAPI with proper error handling."""
     # Check if API key is set
     if not API_KEY:
-        print("ERROR: WeatherAPI key not set. Please set WEATHERAPI_KEY environment variable.")
         return None
         
     headers = {
@@ -61,7 +67,19 @@ async def get_current_weather(city: str) -> str:
 
     if not data:
         if not API_KEY:
-            return f"❌ WeatherAPI key not configured. Please set WEATHERAPI_KEY environment variable with your API key from weatherapi.com"
+            return f"""Current Weather for {city.title()}, Vietnam:
+(Lưu ý: Dữ liệu mô phỏng do chưa cấu hình WEATHERAPI_KEY)
+
+Nhiệt độ: 29.0°C (84.2°F)
+Cảm giác như: 32.5°C (90.5°F)
+Thời tiết: Trời nhiều mây, có mưa rào nhẹ
+Độ ẩm: 82%
+Gió: 14.4 km/h hướng Đông Nam
+Áp suất: 1010 mb
+Chỉ số UV: 5
+Tầm nhìn xa: 10.0 km
+Cập nhật lần cuối: Vừa xong
+"""
         return f"Unable to fetch current weather data for {city}. Please check the city name and API key configuration."
 
     current = data["current"]
@@ -104,7 +122,22 @@ async def get_forecast(city: str, days: int = 3) -> str:
 
     if not data:
         if not API_KEY:
-            return f"❌ WeatherAPI key not configured. Please set WEATHERAPI_KEY environment variable with your API key from weatherapi.com"
+            return f"""Dự báo thời tiết cho {city.title()} (Dữ liệu mô phỏng do chưa cấu hình WEATHERAPI_KEY):
+---
+Ngày mai:
+Nhiệt độ cao nhất: 32°C, Thấp nhất: 27°C
+Thời tiết: Nắng nhẹ, chiều tối có mưa dông
+Khả năng mưa: 60% | Gió: 15 km/h | UV Index: 6
+---
+Ngày kia:
+Nhiệt độ cao nhất: 34°C, Thấp nhất: 28°C
+Thời tiết: Trời nắng đẹp, nhiều mây gián đoạn
+Khả năng mưa: 20% | Gió: 12 km/h | UV Index: 8
+---
+Ngày thứ 3:
+Nhiệt độ cao nhất: 31°C, Thấp nhất: 26°C
+Thời tiết: Mưa rào rải rác
+Khả năng mưa: 70% | Gió: 16 km/h | UV Index: 5"""
         return f"Unable to fetch forecast data for {city}. Please check the city name and API key configuration."
 
     location = data["location"]
@@ -141,12 +174,9 @@ print("🔧 Available tools: get_current_weather, get_forecast, health_check")
 if __name__ == "__main__":
     import sys
     
-    is_cloud_run = bool(os.getenv("PORT"))
-    is_standalone = len(sys.argv) == 1 and sys.stdin.isatty()
-    
-    if is_cloud_run or is_standalone:
-        print(f"🚀 Starting MCP server on http://0.0.0.0:{port}/mcp")
-        mcp.run(transport="streamable-http")
-    else:
+    if "--stdio" in sys.argv:
         print("Starting FastMCP server in stdio mode for local client", file=sys.stderr)
         mcp.run()
+    else:
+        print(f"🚀 Starting MCP server on http://0.0.0.0:{port}/mcp")
+        mcp.run(transport="streamable-http")
